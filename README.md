@@ -1,83 +1,109 @@
-# Celsius – Distributed MongoDB Cloud System (Multi-Region)
+# Celsius Distributed MongoDB System
 
 ## Overview
-Celsius is a portfolio reconstruction of a database systems project where we designed a multi-region data platform to support operations across **Japan, the United States, and Argentina**. The system uses a **sharded MongoDB cluster** and emphasizes data integrity through **schema validation**, **stored procedures**, and **explain plan** analysis.
 
-This repo focuses on the system design choices and the core database logic that powers a realistic business workflow (contracts, billing, labor rates, and regional operations).
+This project simulates a multi-region distributed MongoDB deployment representing geographic warehouses (Argentina, Japan, United States).
 
----
+The system focuses on:
 
-## What This System Solves
-The business needs a database that can:
-- Support global regions with different operational constraints
-- Track contracts, billing, and profitability
-- Enforce business rules (ex: max hours per project)
-- Produce reliable reporting (billing by region, active contracts, profit)
-
----
-
-## Architecture (High Level)
-- **3 Regions (conceptual):** Japan, United States, Argentina  
-- **Database:** MongoDB (Sharded Cluster)
-- **Core Features:**
-  - Sharding for scalability
-  - Validation rules for data quality
-  - Stored procedures (MongoDB functions) for reusable business logic
-  - Aggregation pipelines for analytics reporting
-  - Explain plans to reason about performance
-
-(See `/architecture` for the diagram.)
+- Business rule enforcement using schema validation
+- Stored procedures for financial calculations
+- Aggregation pipelines for reporting
+- Performance validation using MongoDB explain plans
+- Indexing strategies aligned with query patterns
+- Architectural reasoning for distributed systems
 
 ---
 
-## Data Model (Collections)
-- `clients`
-- `client_contracts` (billing, payment, profit tracking)
-- `projects`
-- `timecards`
-- `labor_rates` (linked to role + region)
-- `regions`
-- `contract_requests` (enforces Max_num_hrs ≤ 25 per project)
+## Architecture Summary
+
+Each virtual machine represents a geographic region.
+
+Collections include:
+
+- client_contracts
+- contract_requests
+- labor_rates
+- clients
+- projects
+- regions
+
+Compound indexes are used to support common filtered queries such as region + status dashboards.
 
 ---
 
-## Stored Procedures
-- `calculateProfit` – computes contract profit using billing vs labor cost
-- `getClientContracts` – fetches contracts with client + project context
-- `billingByRegion` – aggregates billing metrics by region
+## Business Logic Functions
 
-See `/procedures`.
+Implemented MongoDB functions:
 
----
+- calculateProfit(contractId)
+- getClientContracts(clientId, limit)
+- billingByRegion()
 
-## Validation Rules
-Schema validation helps prevent bad data from entering critical collections (ex: hours cap per project).  
-See `/schemas/validation_rules.js`.
+These functions simulate production-style business logic inside MongoDB.
 
 ---
 
-## Example Analytics Outputs
-- Billing by region (aggregation pipeline)
-- Top clients by revenue
-- Profitability by contract type
-- Contract capacity and hours utilization
+## Schema Validation
 
-See `/queries`.
+Schema rules enforce:
 
----
+- max_num_hrs ≤ 25 in contract_requests
+- Required fields validation
+- Controlled status enum values
 
-## What I Contributed / Owned
-- Designed the multi-region sharded architecture concept
-- Implemented schema validation rules and business constraints
-- Built stored procedures for financial and contract logic
-- Wrote aggregation pipelines and explain plan analysis for performance reasoning
+This ensures business constraints are enforced at the database level.
 
 ---
 
-## Tech Stack
-MongoDB • Aggregation Pipelines • Validation Rules • Stored Procedures • Explain Plans
+## Performance Optimization
+
+Explain plans were used to evaluate:
+
+- Documents examined
+- Execution time
+- Index usage
+- Query planner decisions (IXSCAN vs COLLSCAN)
+
+Indexes implemented:
+
+- client_contracts(client_id)
+- client_contracts(region_code, status)
+- contract_requests(project_id, region_code)
+- labor_rates(role_id, region_code)
 
 ---
 
-## Notes
-This repository is a clean, portfolio-ready reconstruction based on the original course implementation and is designed to clearly demonstrate database architecture and query engineering skills.
+## Before vs After Indexing
+
+| Metric | Before Index | After Index |
+|--------|--------------|------------|
+| Docs Examined | High (Full Scan) | Low (Targeted Scan) |
+| Execution Time | Slower | Faster |
+| Query Plan | COLLSCAN | IXSCAN |
+| Scalability | Limited | Scales Across Regions |
+
+---
+
+## Scalability Considerations
+
+- Indexes aligned with regional query patterns
+- Compound indexes support filtered dashboards
+- Architecture supports future sharding by region_code
+- Designed to scale under increasing contract volume
+
+---
+
+## Future Improvements
+
+- Implement shard keys aligned with region_code
+- Add partial indexes for active contracts
+- Introduce monitoring metrics for production environments
+
+---
+
+## Author
+
+Samuel Nono  
+M.S. Data Science  
+Focus: Data Engineering | Distributed Systems | Backend Optimization
