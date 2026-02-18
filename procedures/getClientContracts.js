@@ -53,3 +53,4 @@ db.system.js.save({
     return db.client_contracts.aggregate(pipeline).toArray();
   }
 });
+Add getClientContracts MongoDB function
