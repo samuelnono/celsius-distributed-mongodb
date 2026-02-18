@@ -29,17 +29,16 @@ Using `explain("executionStats")` allows us to measure:
 db.client_contracts
   .explain("executionStats")
   .aggregate([
-    { 
-      $group: { 
-        _id: "$region_code", 
-        total_paid: { $sum: "$payment_received" } 
-      } 
+    {
+      $group: {
+        _id: "$region_code",
+        total_paid: { $sum: "$payment_received" }
+      }
     }
   ])
+```
 
----
-
-## What to Evaluate
+### What to Evaluate
 
 - Does the plan show `COLLSCAN`?
 - How many documents were examined?
@@ -54,6 +53,7 @@ db.client_contracts
 db.client_contracts
   .explain("executionStats")
   .find({ client_id: "C-1001" })
+```
 
 ---
 
@@ -66,28 +66,30 @@ db.client_contracts.createIndex({ client_id: 1 })
 db.client_contracts.createIndex({ region_code: 1, status: 1 })
 db.contract_requests.createIndex({ project_id: 1, region_code: 1 })
 db.labor_rates.createIndex({ role_id: 1, region_code: 1 })
+```
 
-After index creation, rerun the same query using:
+After index creation, rerun the same queries and compare:
 
 ```js
 .explain("executionStats")
+```
 
-Compare:
+### Compare
 
-- executionStats.executionTimeMillis
-- executionStats.totalDocsExamined
+- `executionStats.executionTimeMillis`
+- `executionStats.totalDocsExamined`
 - Confirm the query plan uses `IXSCAN` instead of `COLLSCAN`
 
 ---
 
 ## Before vs After Indexing Strategy
 
-| Metric | Before Index | After Index |
-|--------|--------------|------------|
-| Docs Examined | High (Full Scan) | Low (Targeted Scan) |
-| Execution Time | Slower | Faster |
-| Query Plan | COLLSCAN | IXSCAN |
-| Scalability | Limited | Scales Across Regions |
+| Metric           | Before Index        | After Index         |
+|------------------|--------------------|---------------------|
+| Docs Examined    | High (Full Scan)   | Low (Targeted Scan) |
+| Execution Time   | Slower             | Faster              |
+| Query Plan       | COLLSCAN           | IXSCAN              |
+| Scalability      | Limited            | Scales Across Regions |
 
 ---
 
@@ -110,9 +112,8 @@ Explain plans validate that:
 - Aggregation pipelines remain efficient
 - The distributed MongoDB architecture remains performant under growth
 
-Future improvements:
+### Future Improvements
 
 - Add shard keys aligned with `region_code`
 - Implement partial indexes for active contracts
 - Monitor query performance using production-like metrics
-
