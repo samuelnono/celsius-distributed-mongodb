@@ -84,12 +84,12 @@ After index creation, rerun the same queries and compare:
 
 ## Before vs After Indexing Strategy
 
-| Metric           | Before Index        | After Index         |
-|------------------|--------------------|---------------------|
-| Docs Examined    | High (Full Scan)   | Low (Targeted Scan) |
-| Execution Time   | Slower             | Faster              |
-| Query Plan       | COLLSCAN           | IXSCAN              |
-| Scalability      | Limited            | Scales Across Regions |
+| Metric         | Before Index        | After Index         |
+|---------------|--------------------|---------------------|
+| Docs Examined | High (Full Scan)   | Low (Targeted Scan) |
+| Execution Time| Slower             | Faster              |
+| Query Plan    | COLLSCAN           | IXSCAN              |
+| Scalability   | Limited            | Scales Across Regions |
 
 ---
 
@@ -98,7 +98,7 @@ After index creation, rerun the same queries and compare:
 Because each virtual machine represents a geographic warehouse (Argentina, Japan, United States):
 
 - Indexes must align with regional query patterns
-- Compound indexes support filtered dashboard queries (e.g., region + status)
+- Compound indexes support filtered dashboard queries (region + status)
 - Performance validation should be tested independently per region
 - Index efficiency directly impacts cross-region latency
 
