@@ -27,6 +27,11 @@ The architecture was designed to test:
 
 ## 🏗 Architecture Design
 
+### System Architecture Diagram
+
+![Celsius Distributed MongoDB Architecture](CelsiusArchitecture.png)
+
+
 ### Core Collections
 - `client_contracts`
 - `contract_requests`
