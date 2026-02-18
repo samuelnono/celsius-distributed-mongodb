@@ -1,109 +1,136 @@
-# Celsius Distributed MongoDB System
+#  Celsius Distributed MongoDB System
 
-## Overview
-
-This project simulates a multi-region distributed MongoDB deployment representing geographic warehouses (Argentina, Japan, United States).
-
-The system focuses on:
-
-- Business rule enforcement using schema validation
-- Stored procedures for financial calculations
-- Aggregation pipelines for reporting
-- Performance validation using MongoDB explain plans
-- Indexing strategies aligned with query patterns
-- Architectural reasoning for distributed systems
+> Multi-Region Distributed Database Architecture  
+> Focus: Performance Optimization, Index Strategy, and Backend Business Logic
 
 ---
 
-## Architecture Summary
+## 🌍 System Overview
 
-Each virtual machine represents a geographic region.
+This project simulates a distributed MongoDB deployment across:
 
-Collections include:
+- 🇦🇷 Argentina
+- 🇯🇵 Japan
+- 🇺🇸 United States
 
-- client_contracts
-- contract_requests
-- labor_rates
-- clients
-- projects
-- regions
+Each virtual machine represents a geographic warehouse.
 
-Compound indexes are used to support common filtered queries such as region + status dashboards.
+The architecture was designed to test:
 
----
-
-## Business Logic Functions
-
-Implemented MongoDB functions:
-
-- calculateProfit(contractId)
-- getClientContracts(clientId, limit)
-- billingByRegion()
-
-These functions simulate production-style business logic inside MongoDB.
+- Schema validation rules
+- Stored business logic
+- Aggregation-based reporting
+- Index-driven performance optimization
+- Explain plan performance validation
 
 ---
 
-## Schema Validation
+## 🏗 Architecture Design
 
-Schema rules enforce:
+### Core Collections
+- `client_contracts`
+- `contract_requests`
+- `labor_rates`
+- `clients`
+- `projects`
+- `regions`
 
-- max_num_hrs ≤ 25 in contract_requests
+### Distributed Consideration
+Indexes were aligned with regional query patterns to reduce cross-region latency.
+
+---
+
+## ⚙️ Business Logic (MongoDB Functions)
+
+Production-style server-side logic implemented:
+
+- `calculateProfit(contractId)`
+- `getClientContracts(clientId, limit)`
+- `billingByRegion()`
+
+These simulate financial computation and reporting pipelines inside the database.
+
+---
+
+## 🛡 Schema Enforcement
+
+Business rules enforced at the database layer:
+
+- `max_num_hrs ≤ 25`
 - Required fields validation
-- Controlled status enum values
+- Controlled enum status values
+- Strict validation level
 
-This ensures business constraints are enforced at the database level.
+This prevents invalid operational data from entering the system.
 
 ---
 
-## Performance Optimization
+## 📊 Performance Optimization
 
-Explain plans were used to evaluate:
+### Explain Plan Validation
+
+Used:
+
+.explain("executionStats")
+
+
+Measured:
 
 - Documents examined
 - Execution time
 - Index usage
-- Query planner decisions (IXSCAN vs COLLSCAN)
-
-Indexes implemented:
-
-- client_contracts(client_id)
-- client_contracts(region_code, status)
-- contract_requests(project_id, region_code)
-- labor_rates(role_id, region_code)
+- Query plan (IXSCAN vs COLLSCAN)
 
 ---
 
-## Before vs After Indexing
+## 📈 Index Strategy
 
-| Metric | Before Index | After Index |
-|--------|--------------|------------|
-| Docs Examined | High (Full Scan) | Low (Targeted Scan) |
+db.client_contracts.createIndex({ client_id: 1 })
+
+db.client_contracts.createIndex({ region_code: 1, status: 1 })
+
+db.contract_requests.createIndex({ project_id: 1, region_code: 1 })
+
+db.labor_rates.createIndex({ role_id: 1, region_code: 1 })
+
+
+---
+
+## 🔬 Before vs After Indexing
+
+| Metric | Before | After |
+|--------|--------|--------|
+| Docs Examined | Full Scan | Targeted |
 | Execution Time | Slower | Faster |
 | Query Plan | COLLSCAN | IXSCAN |
-| Scalability | Limited | Scales Across Regions |
+| Scalability | Limited | Regional Scale |
 
 ---
 
-## Scalability Considerations
+## 🧠 Architectural Reasoning
 
-- Indexes aligned with regional query patterns
-- Compound indexes support filtered dashboards
-- Architecture supports future sharding by region_code
-- Designed to scale under increasing contract volume
+Because each VM represents a geographic warehouse:
+
+- Compound indexes support region + status dashboards
+- Index efficiency reduces cross-region latency
+- Query validation must be tested per region
+- Architecture supports future sharding by `region_code`
 
 ---
 
-## Future Improvements
+## 🚀 Future Scalability Improvements
 
 - Implement shard keys aligned with region_code
 - Add partial indexes for active contracts
-- Introduce monitoring metrics for production environments
+- Introduce production performance monitoring
+- Add query latency benchmarking
 
 ---
 
-## Author
+## 👤 Author
 
-Samuel Nono  
+**Samuel Nono**  
 M.S. Data Science  
-Focus: Data Engineering | Distributed Systems | Backend Optimization
+Backend Systems | Data Engineering | Distributed Architecture
+
+
