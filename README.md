@@ -5,7 +5,7 @@
 
 ---
 
-## 🌍 System Overview
+## System Overview
 
 This project simulates a distributed MongoDB deployment across:
 
@@ -25,7 +25,7 @@ The architecture was designed to test:
 
 ---
 
-## 🏗 Architecture Design
+## Architecture Design
 
 ### System Architecture Diagram
 
@@ -45,7 +45,7 @@ Indexes were aligned with regional query patterns to reduce cross-region latency
 
 ---
 
-## ⚙️ Business Logic (MongoDB Functions)
+## Business Logic (MongoDB Functions)
 
 Production-style server-side logic implemented:
 
@@ -57,7 +57,7 @@ These simulate financial computation and reporting pipelines inside the database
 
 ---
 
-## 🛡 Schema Enforcement
+## Schema Enforcement
 
 Business rules enforced at the database layer:
 
@@ -70,7 +70,7 @@ This prevents invalid operational data from entering the system.
 
 ---
 
-## 📊 Performance Optimization
+## Performance Optimization
 
 ### Explain Plan Validation
 
@@ -88,7 +88,7 @@ Measured:
 
 ---
 
-## 📈 Index Strategy
+## Index Strategy
 
 db.client_contracts.createIndex({ client_id: 1 })
 
@@ -101,7 +101,7 @@ db.labor_rates.createIndex({ role_id: 1, region_code: 1 })
 
 ---
 
-## 🔬 Before vs After Indexing
+## Before vs After Indexing
 
 | Metric | Before | After |
 |--------|--------|--------|
@@ -112,7 +112,7 @@ db.labor_rates.createIndex({ role_id: 1, region_code: 1 })
 
 ---
 
-## 🧠 Architectural Reasoning
+##  Architectural Reasoning
 
 Because each VM represents a geographic warehouse:
 
@@ -123,7 +123,7 @@ Because each VM represents a geographic warehouse:
 
 ---
 
-## 🚀 Future Scalability Improvements
+##  Future Scalability Improvements
 
 - Implement shard keys aligned with region_code
 - Add partial indexes for active contracts
@@ -132,7 +132,7 @@ Because each VM represents a geographic warehouse:
 
 ---
 
-## 👤 Author
+##  Author
 
 **Samuel Nono**  
 M.S. Data Science  
